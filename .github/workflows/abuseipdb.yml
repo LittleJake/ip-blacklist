@@ -14,8 +14,8 @@ jobs:
       uses: actions/checkout@main
     - name: Fetch
       run: | 
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=100 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_100.txt
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=75 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_75.txt
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_100.txt
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_75.txt
     - name: Commit
       run: |
         git config --global user.email action@github.com
