@@ -1,0 +1,29 @@
+name: AbuseIPDB IP Blacklist
+
+on: 
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */4 * * *'
+   
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Fetch
+      run: | 
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=100 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_100.txt
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=75 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > blacklist_ip_score_75.txt
+    - name: Commit
+      run: |
+        git config --global user.email action@github.com
+        git config --global user.name Action
+        git add .
+        git commit -m "Update IP." -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main 
