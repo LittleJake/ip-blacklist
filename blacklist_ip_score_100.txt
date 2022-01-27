@@ -1,0 +1,1 @@
+{"errors":[{"detail":"Daily rate limit of 20 requests exceeded for this endpoint. See headers for additional details.","status":429}]}
