@@ -18,7 +18,8 @@ jobs:
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" > abuseipdb_blacklist_ip_score_75.txt
         curl http://antivirus.neu.edu.cn/ssh/lists/neu.txt -H "Accept: text/plain" > neucert_blacklist_ip.txt
         curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain" > ustc_blacklist_ip.txt
-        cat `ls *.txt`|grep -v "#"|sort|uniq > all_blacklist.txt
+        for F in `ls *.txt`;do echo "\n">> $F; done
+        cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
     - name: Commit
       run: |
         git config --global user.email action@github.com
