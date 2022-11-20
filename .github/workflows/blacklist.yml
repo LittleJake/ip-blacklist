@@ -3,7 +3,7 @@ name: IP Blacklist
 on: 
   workflow_dispatch:
   schedule:
-    - cron: '0 */4 * * *'
+    - cron: '0 */6 * * *'
    
 jobs:
   fetch:
@@ -18,7 +18,7 @@ jobs:
         curl http://antivirus.neu.edu.cn/ssh/lists/neu.txt -H "Accept: text/plain" > neucert_blacklist_ip.txt || true
         curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain" > ustc_blacklist_ip.txt || true
         for F in `ls *.txt`;do echo "">> $F; done
-        cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
+        cat *.txt|grep -v "#"|grep -v "127.0.0.1"|sort|uniq > all_blacklist.txt
     - name: Commit
       run: |
         git config --global user.email action@github.com
