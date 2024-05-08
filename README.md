@@ -18,4 +18,4 @@
 
 IP source from AbuseIPDB, USTC, NEUCERT.
 
-Update 4 hourly.
+Update 4 times a day.
