@@ -24,7 +24,7 @@ jobs:
         curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain"|grep -v "127.0.0.1" > ustc_blacklist_ip.txt || true
         for F in `ls *.txt`;do echo "">> $F; done
         cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
-        cat all_blacklist.txt tmpfile > all_blacklist_append.txt
+        cat all_blacklist.txt tmpfile |uniq> all_blacklist_append.txt
     - name: Commit
       run: |
         git config --global user.email action@github.com
