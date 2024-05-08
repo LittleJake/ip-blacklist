@@ -13,6 +13,7 @@ jobs:
       uses: actions/checkout@main
     - name: Fetch
       run: | 
+        mv all_blacklist_append.txt tmpfile
         echo "">abuseipdb_blacklist_ip_score_100.txt
         echo "">abuseipdb_blacklist_ip_score_75.txt
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.txt || true
@@ -23,6 +24,7 @@ jobs:
         curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain"|grep -v "127.0.0.1" > ustc_blacklist_ip.txt || true
         for F in `ls *.txt`;do echo "">> $F; done
         cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
+        cat all_blacklist.txt tmpfile > all_blacklist_append.txt
     - name: Commit
       run: |
         git config --global user.email action@github.com
