@@ -25,6 +25,7 @@ jobs:
         for F in `ls *.txt`;do echo "">> $F; done
         cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
         cat all_blacklist.txt tmpfile |uniq> all_blacklist_append.txt
+        rm -f tmpfile
     - name: Commit
       run: |
         git config --global user.email action@github.com
