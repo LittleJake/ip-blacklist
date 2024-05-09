@@ -18,6 +18,8 @@ jobs:
         echo "">abuseipdb_blacklist_ip_score_75.txt
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.txt || true
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.txt || true
+        echo "">>abuseipdb_blacklist_ip_score_100.txt
+        echo "">>abuseipdb_blacklist_ip_score_75.txt
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.txt || true
         curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.txt || true
         curl http://antivirus.neu.edu.cn/ssh/lists/neu.txt -H "Accept: text/plain"|grep -v "127.0.0.1"|grep -v "#"| awk -F" " '{print $2}' > neucert_blacklist_ip.txt || true
