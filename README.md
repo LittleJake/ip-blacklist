@@ -14,7 +14,7 @@
 | [neucert_blacklist_ip.txt](https://cdn.jsdelivr.net/gh/LittleJake/ip-blacklist/neucert_blacklist_ip.txt) | NEUCERT     | -            |
 | [ustc_blacklist_ip.txt](https://cdn.jsdelivr.net/gh/LittleJake/ip-blacklist/ustc_blacklist_ip.txt) | USTC        | -            |
 | [all_blacklist.txt](https://cdn.jsdelivr.net/gh/LittleJake/ip-blacklist/all_blacklist.txt) | ALL         | Mixed        |
-| [all_blacklist_append.txt.gz](https://cdn.jsdelivr.net/gh/LittleJake/ip-blacklist/all_blacklist_append.txt.gz) | ALL         | Mixed & Append all history IP (Use with caution)      |
+| [all_blacklist_append.txt.gz](https://github.com/LittleJake/ip-blacklist/raw/main/all_blacklist_append.txt.gz) | ALL         | Mixed & Append all history IP (Use with caution)      |
 
 
 IP source from AbuseIPDB, USTC, NEUCERT.
