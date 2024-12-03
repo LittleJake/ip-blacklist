@@ -13,22 +13,23 @@ jobs:
       uses: actions/checkout@main
     - name: Fetch
       run: | 
-        gzip -d all_blacklist_append.txt.gz || echo 1
-        mv all_blacklist_append.txt tmpfile
-        echo "">abuseipdb_blacklist_ip_score_100.txt
-        echo "">abuseipdb_blacklist_ip_score_75.txt
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.txt || true
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.txt || true
-        echo "">>abuseipdb_blacklist_ip_score_100.txt
-        echo "">>abuseipdb_blacklist_ip_score_75.txt
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.txt || true
-        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.txt || true
-        curl http://antivirus.neu.edu.cn/ssh/lists/neu.txt -H "Accept: text/plain"|grep -v "127.0.0.1"|grep -v "#"| awk -F" " '{print $2}' > neucert_blacklist_ip.txt || true
-        curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain"|grep -v "127.0.0.1" > ustc_blacklist_ip.txt || true
-        for F in `ls *.txt`;do echo "">> $F; done
-        cat *.txt|grep -v "#"|sort|uniq > all_blacklist.txt
-        cat all_blacklist.txt tmpfile |uniq | gzip > all_blacklist_append.txt.gz
-        rm -f tmpfile all_blacklist_append.txt
+        chmod +x ./cidr-merger
+        gzip -d all_blacklist_append.txt.gz && mv all_blacklist_append.txt all_blacklist_append.tmp
+        echo "">abuseipdb_blacklist_ip_score_100.tmp
+        echo "">abuseipdb_blacklist_ip_score_75.tmp
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.tmp || true
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=6 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.tmp || true
+        echo "">>abuseipdb_blacklist_ip_score_100.tmp
+        echo "">>abuseipdb_blacklist_ip_score_75.tmp
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=100 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_100.tmp || true
+        curl -G https://api.abuseipdb.com/api/v2/blacklist -d ipVersion=4 -d confidenceMinimum=75 -d limit=9999999 -d plaintext -H "Key: ${{ secrets.ABUSEIPDB_TOKEN }}" -H "Accept: text/plain" >> abuseipdb_blacklist_ip_score_75.tmp || true
+        ./cidr-merger -o abuseipdb_blacklist_ip_score_75.txt abuseipdb_blacklist_ip_score_75.tmp
+        ./cidr-merger -o abuseipdb_blacklist_ip_score_100.txt abuseipdb_blacklist_ip_score_100.tmp
+        curl http://antivirus.neu.edu.cn/ssh/lists/neu.txt -H "Accept: text/plain"|grep -v "127.0.0.1"|grep -v "#"| awk -F" " '{print $2}'|./cidr-merger -o neucert_blacklist_ip.txt || true
+        curl https://blackip.ustc.edu.cn/list.php?txt -H "Accept: text/plain"|grep -v "127.0.0.1"|./cidr-merger -o ustc_blacklist_ip.txt || true
+        ./cidr-merger -o all_blacklist_append.txt *.txt all_blacklist_append.tmp
+        gzip all_blacklist_append.txt
+        rm -f *.tmp
     - name: Commit
       run: |
         git config --global user.email action@github.com
