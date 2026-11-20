@@ -1,0 +1,39 @@
+name: IP Blacklist
+
+on: 
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Update Blacklists
+      env:
+        ABUSEIPDB_TOKEN: ${{ secrets.ABUSEIPDB_TOKEN }}
+      run: |
+        python3 update.py
+
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add -A
+        if git diff --staged --quiet; then
+          echo "No blacklist updates to commit."
+        else
+          git commit -m "Update IP blacklist [skip ci]"
+          git push origin main
+        fi

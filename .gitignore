@@ -1,0 +1,16 @@
+# Temporary files
+*.tmp
+*.raw
+*.bak
+*.swp
+*~
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
